@@ -1,0 +1,10 @@
+* inskcape jenkins docker build
+** the jenkins
+https://registry.hub.docker.com/_/jenkins/
+
+sudo mkdir /var/inkscape-jenkins
+sudo chown 1000:1000 /var/inkscape-jenkins/
+docker run --name inkscape-jenkins -p 18080:8080 -v /var/inkscape-jenkins:/var/jenkins_home jenkins
+
+
+** the fedora build slave
