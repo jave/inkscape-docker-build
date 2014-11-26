@@ -1,10 +1,14 @@
-* inskcape jenkins docker build
-Please not that this is a very early draft.
+* Inskcape Jenkins Docker build
+Please note that this is a very early draft.
 
 ** Overview
-There are several entities involved,a Host, and several docker containers.
+There are several entities involved, a Host, and several Docker containers.
 
 The separation in several containers brings isolation and flexibility.
+
+The containers are meant to be deployed together, to form a build cluster.
+However, you can use the containers stand-alone, if you for instance just want a convenient
+way to try building for a different distro.
 
 *** The host
 The host runs several different docker containers, and is also responsible for 
@@ -14,26 +18,45 @@ Jenkins is run as a separate docker container, that is linked to docker build sl
 
 This separation is intended to give an overview of all inkscape related builds from a single interface.
 
+The Jenkins conatiner manages the inkscape source tree, so it needs to have bzr installed.
 
 *** The build slave dockers
-The are atm 2 build slaves, one for ubuntu and one for fedora.
+The are at the moment 2 build slaves, one for Ubuntu and one for Fedora.
 These are controlled via ssha from the jenkins docker, via ssh.
 
 
 ** details
-*** the jenkins docker container
-https://registry.hub.docker.com/_/jenkins/
-
+*** shared
 sudo mkdir /var/inkscape-jenkins
 sudo chown 1000:1000 /var/inkscape-jenkins/
-docker run --name inkscape-jenkins -p 18080:8080 -v /var/inkscape-jenkins:/var/jenkins_home jenkins
 
 
 *** the fedora build
-docker build
-docker run 
+docker build -t inkscape_jenkins/fedora . 
+docker run  --name inkscape_jenkins_fedora  -v /var/inkscape-jenkins:/var/jenkins_home  inkscape_jenkins/fedora
+
 
 *** the ubuntu build slave
-see http://wiki.inkscape.org/wiki/index.php/Jenkins_server_setup
+See the document by Johan Engelen http://wiki.inkscape.org/wiki/index.php/Jenkins_server_setup
 for the base dependencies.
+
+docker build -t inkscape_jenkins/ubuntu . 
+docker run  --name inkscape_jenkins_ubuntu  -v /var/inkscape-jenkins:/var/jenkins_home  inkscape_jenkins/ubuntu
+
+*** the jenkins docker container
+Our jenkins docker is based on the official one:
+https://registry.hub.docker.com/_/jenkins/
+
+It must be launched after the build slaves.
+
+docker build --tag=inkscape_jenkins/jenkins . 
+
+docker run --name inkscape-jenkins -p 18080:8080 -v /var/inkscape-jenkins:/var/jenkins_home \
+--link=inkscape_jenkins_fedora:inkscape_fedora \
+--link=inkscape_jenkins_ubuntu:inkscape_ubuntu \
+jenkins
+
+
+we need to add some plugins, but these should be added to the shared mount, so it cant be done during the image compiling.
+
 
