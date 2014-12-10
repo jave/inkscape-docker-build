@@ -60,3 +60,5 @@ jenkins
 we need to add some plugins, but these should be added to the shared mount, so it cant be done during the image compiling.
 
 
+** Kubernetes
+see inkscape-jenkins.json

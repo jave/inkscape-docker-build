@@ -1,0 +1,56 @@
+{
+    "apiVersion": "v1beta1",
+    "kind": "Pod",
+    "id": "inkscape-jenkins",
+    "namespace": "default",
+    "labels": {
+        "name": "inkscape-jenkins"
+    },
+    "desiredState": {
+        "manifest": {
+            "version": "v1beta1",
+            "id": "inkscape-jenkins",
+            "volumes": "/var/inkscape-jenkins",
+            "containers": [
+                {
+                    "name": "jenkins",
+                    "image": "inkscape_jenkins/jenkins",
+                    "ports": [
+                        {
+                            "containerPort": 80,
+                            "hostPort": 30080,
+                            "protocol": "TCP"
+                        }
+                    ]
+                },
+                {
+                    "name": "fedora",
+                    "image": "inkscape_jenkins/fedora",
+                    "ports": [
+                        {
+                            "containerPort": 22,
+                            "hostPort": 30022,
+                            "protocol": "TCP"
+                        }
+                    ]
+                },
+                {
+                    "name": "ubuntu",
+                    "image": "inkscape_jenkins/ubuntu",
+                    "ports": [
+                        {
+                            "containerPort": 22,
+                            "hostPort": 30023,
+                            "protocol": "TCP"
+                        }
+                    ]
+                }
+
+
+            ],
+            "restartPolicy": {
+                "always": {}
+            }
+        },
+    },
+}
