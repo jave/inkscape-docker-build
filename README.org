@@ -62,3 +62,12 @@ we need to add some plugins, but these should be added to the shared mount, so i
 
 ** Kubernetes
 see inkscape-jenkins.json
+** Makefile
+Kubernetes can be daunting, so theres a Makefile as well.
+
+to build the dockers:
+make dockers
+
+This will be time consuming the first time.
+
+
